@@ -1,4 +1,4 @@
-name: BMad bootstrap validation
+name: BMad v6 bootstrap validation
 
 on:
   pull_request:
@@ -31,26 +31,37 @@ jobs:
           python-version: "3.12"
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
-      - name: Print tool versions
+      - name: Verify prerequisites and Bash syntax
+        shell: bash
         run: |
+          set -euxo pipefail
           node --version
           npm --version
           python --version
           uv --version
-          npx --yes bmad-method@6.12.4 --version
-      - name: Check script syntax
-        run: |
           bash -n scripts/install-bmad.sh scripts/verify-bmad.sh
-      - name: Official BMad install — temporary runner only
+      - name: Install official pinned BMad in ephemeral runner
+        shell: bash
         run: |
-          bash scripts/install-bmad.sh
+          set -o pipefail
+          bash scripts/install-bmad.sh 2>&1 | tee bmad-install.log
       - name: Verify installed runtime
+        shell: bash
         run: |
           bash scripts/verify-bmad.sh
           test -d _bmad/bmm
-          echo "Instalação validada apenas em runner temporário."
-      - name: Ensure no operational credentials or broker integration
+          echo "BMad instalado somente no runner efêmero"
+      - name: Check that no credentials or AWS resources are introduced
+        shell: bash
         run: |
           test ! -d secrets
           test ! -f .env
           test ! -d infra/terraform/.terraform
+      - name: Upload installation diagnostics (success or failure)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bmad-install-diagnostics
+          path: bmad-install.log
+          if-no-files-found: warn
+          retention-days: 7
