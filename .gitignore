@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env
+.env.*
+!.env.example
+
+# Editor and local
+.DS_Store
+.vscode/settings.json
+.idea/
+
+# Local credentials / certificates
+*.pem
+*.key
+*.p12
+secrets/
+credentials/
+
+# BMad user-specific setup, do not ignore official project runtime
+_bmad/_config/*local*
+_bmad/**/config.user.*
+
+# Test and backtest artifacts
+.coverage
+htmlcov/
+reports/local/
+data/private/
+data/raw/
