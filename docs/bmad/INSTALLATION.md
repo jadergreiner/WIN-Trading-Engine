@@ -10,10 +10,10 @@
 - Por que não v7: linha em evolução; migração requer novo ADR.
 
 Fontes oficiais:
-- https://docs.bmad-method.org/start/install-bmad/
+- https://github.com/bmad-code-org/BMAD-METHOD/tree/V6.12 (documentação da linha escolhida)
+- https://docs.bmad-method.org/start/install-bmad/ (documentação atual, com instruções de v7 em prévia)
 - https://github.com/bmad-code-org/BMAD-METHOD/releases/tag/v6.12.4
 - https://www.npmjs.com/package/bmad-method/v/6.12.4
-- https://github.com/bmad-code-org/BMAD-METHOD/tree/V6.12
 
 ## Pré-requisitos
 Node.js >=20.12, npm, Git, Python >=3.10, `uv`, acesso à internet e Codex instalado. Revise os prompts e dependências de terceiros antes de conceder execução.
@@ -44,6 +44,11 @@ npx --yes bmad-method@6.12.4 install --directory . --modules bmm --tools codex -
 ```
 
 O script de Linux/macOS passa o caminho absoluto do clone no argumento `--directory`, evitando depender da pasta atual. Se o instalador modificar opções nesta versão, interrompa a instalação e revise a CLI oficial; **não** substitua silenciosamente pela versão latest.
+
+**Atenção às gerações:** a documentação principal atual usa a Skills CLI e `bmad setup` (linha v7 em prévia); este PR utiliza o instalador npm da **linha estável v6.12**. Não executar os dois modelos de instalação em paralelo. Para a linha v6, usar os comandos gerados pelo instalador, como `bmad-help`, e verificar os nomes exatos após instalar.
+
+**Estado do CI:** as duas primeiras execuções do workflow de instalação falharam. Os logs não estavam acessíveis pela integração. Um commit posterior adicionou captura de saída em artefato de diagnóstico e removeu uma sondagem de versão que não era necessária. O êxito após essa mudança **ainda precisa ser comprovado**.
+
 
 ## Após a instalação
 1. Verifique `_bmad/` e `_bmad/bmm/` e os comandos/skills efetivamente criados para Codex.
