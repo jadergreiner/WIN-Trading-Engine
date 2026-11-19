@@ -1,0 +1,43 @@
+name: BMad bootstrap validation
+
+on:
+  pull_request:
+    paths:
+      - "scripts/install-bmad.sh"
+      - "scripts/verify-bmad.sh"
+      - "scripts/install-bmad.ps1"
+      - "docs/bmad/**"
+      - "AGENTS.md"
+      - ".github/workflows/bmad-bootstrap-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check script syntax
+        run: |
+          bash -n scripts/install-bmad.sh scripts/verify-bmad.sh
+      - name: Official BMad install — temporary runner only
+        run: |
+          bash scripts/install-bmad.sh
+      - name: Verify installed runtime
+        run: |
+          bash scripts/verify-bmad.sh
+          test -d _bmad/bmm
+          echo "Instalação validada apenas em runner temporário."
+      - name: Ensure no operational credentials or broker integration
+        run: |
+          test ! -d secrets
+          test ! -f .env
+          test ! -d infra/terraform/.terraform
