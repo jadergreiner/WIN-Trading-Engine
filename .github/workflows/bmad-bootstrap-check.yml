@@ -17,7 +17,7 @@ permissions:
 jobs:
   verify-bootstrap:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,6 +25,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+      - name: Print tool versions
+        run: |
+          node --version
+          npm --version
+          python --version
+          uv --version
+          npx --yes bmad-method@6.12.4 --version
       - name: Check script syntax
         run: |
           bash -n scripts/install-bmad.sh scripts/verify-bmad.sh
